@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center bg-light py-5">
+    <h1 class="display-4">Welcome to Farmer's Market</h1>
+    <p class="lead">Connect directly with farmers and get the best prices for fresh produce.</p>
+    <hr class="my-4">
+    {% if not user.is_authenticated %}
+    <p>Join our community today!</p>
+    <a href="{{ url_for('auth.sign_up') }}" class="btn btn-success btn-lg me-3">Register Now</a>
+    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-success btn-lg">Login</a>
+    {% endif %}
+</div>
+
+<div class="row mt-5 text-center">
+    <div class="col-md-4">
+        <a href="{{ url_for('views.dashboard') }}" class="text-decoration-none">
+            <div class="card h-100 hover-card">
+                <div class="card-body">
+                    <i class="fas fa-store fa-3x text-success mb-3"></i>
+                    <h3 class="text-dark">Browse Products</h3>
+                    <p class="text-muted">Find fresh produce directly from local farmers.</p>
+                    <span class="btn btn-outline-success mt-2">Start Shopping</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('views.dashboard') }}" class="text-decoration-none">
+            <div class="card h-100 hover-card">
+                <div class="card-body">
+                    <i class="fas fa-gavel fa-3x text-success mb-3"></i>
+                    <h3 class="text-dark">Place Bids</h3>
+                    <p class="text-muted">Get the best prices through our bidding system.</p>
+                    <span class="btn btn-outline-success mt-2">Start Bidding</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('views.about') }}" class="text-decoration-none">
+            <div class="card h-100 hover-card">
+                <div class="card-body">
+                    <i class="fas fa-handshake fa-3x text-success mb-3"></i>
+                    <h3 class="text-dark">How It Works</h3>
+                    <p class="text-muted">Simple bidding process ensures fair prices for everyone.</p>
+                    <span class="btn btn-outline-success mt-2">Learn More</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h2 class="text-center mb-4">Latest Products</h2>
+    <div class="row g-4" id="latest-products">
+        <!-- Products will be loaded dynamically -->
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Load latest products on page load
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/latest-products')
+        .then(response => response.json())
+        .then(products => {
+            const container = document.getElementById('latest-products');
+            products.forEach(product => {
+                const productHtml = `
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            ${product.image_path 
+                                ? `<img src="/static/${product.image_path}" class="card-img-top" alt="${product.name}">`
+                                : `<div class="card-img-top bg-light text-center py-5">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                   </div>`
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">${product.name}</h5>
+                                <p class="card-text">${product.description}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success">${product.category}</span>
+                                    <span>${product.quantity} ${product.unit}</span>
+                                </div>
+                                <p class="card-text mt-2">
+                                    <small class="text-muted">Base Price: ₹${product.base_price.toFixed(2)}</small>
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white border-top-0">
+                                <a href="/product/${product.id}" class="btn btn-outline-success w-100">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += productHtml;
+            });
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>
+
+<style>
+.hover-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Create Account</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone number" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+                        <div class="form-text">Enter a 10-digit phone number without spaces or special characters</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_type" class="form-label">I am a</label>
+                        <select class="form-select" id="user_type" name="user_type" required>
+                            <option value="">Choose...</option>
+                            <option value="farmer">Farmer</option>
+                            <option value="merchant">Merchant</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password2" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Sign Up</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="{{ url_for('auth.login') }}" class="text-success">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const password1 = document.getElementById('password1').value;
+    const password2 = document.getElementById('password2').value;
+    const phone = document.getElementById('phone').value;
+
+    if (password1 !== password2) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        e.preventDefault();
+        alert('Please enter a valid 10-digit phone number!');
+    }
+});
+</script>
+{% endblock %} 

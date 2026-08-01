@@ -1,0 +1,47 @@
+
+=== USERS ===
+
+User ID: 1
+Name: Tanvi
+Email: tanvidongare63@gmail.com
+Type: 9325676634
+------------------------------
+
+User ID: 2
+Name: suhani
+Email: dubesuhani2005@gmail.com
+Type: 9421494297
+------------------------------
+
+=== PRODUCTS ===
+
+Product ID: 1
+Name: Onion
+Category: Vegetable
+Quantity: 50.0 Kilogram (kg)
+Base Price: ₹60.0
+------------------------------
+
+Product ID: 2
+Name: Mango
+Category: Fruit
+Quantity: 50.0 Kilogram (kg)
+Base Price: ₹100.0
+------------------------------
+
+=== BIDS ===
+
+Bid ID: 1
+Amount: ₹70.0
+Status: pending
+------------------------------
+
+Bid ID: 2
+Amount: ₹70.0
+Status: pending
+------------------------------
+
+Bid ID: 3
+Amount: ₹70.0
+Status: pending
+------------------------------

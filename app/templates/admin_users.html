@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Users{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">All Users</h1>
+
+    {% for user in users %}
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                {{ user.name }} ({{ user.user_type|title }})
+                <small class="float-end">{{ user.email }}</small>
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if user.user_type == 'farmer' %}
+            <h6 class="card-subtitle mb-3">Products Listed:</h6>
+            {% if user.products %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Base Price</th>
+                            <th>Date Added</th>
+                            <th>Bids</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in user.products %}
+                        <tr>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.category }}</td>
+                            <td>{{ product.quantity }} {{ product.unit }}</td>
+                            <td>₹{{ product.base_price }}</td>
+                            <td>{{ product.date_added.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if product.bids %}
+                                <button class="btn btn-sm btn-info" type="button" data-bs-toggle="collapse" 
+                                        data-bs-target="#bids{{ product.id }}">
+                                    View Bids ({{ product.bids|length }})
+                                </button>
+                                {% else %}
+                                No bids
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if product.bids %}
+                        <tr>
+                            <td colspan="6" class="p-0">
+                                <div class="collapse" id="bids{{ product.id }}">
+                                    <div class="card card-body">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bidder</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for bid in product.bids %}
+                                                <tr>
+                                                    <td>{{ bid.bidder.name }}</td>
+                                                    <td>₹{{ bid.amount }}</td>
+                                                    <td>{{ bid.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                                    <td>
+                                                        <span class="badge bg-{{ 'success' if bid.status == 'accepted' else 'warning' if bid.status == 'pending' else 'danger' }}">
+                                                            {{ bid.status }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No products listed yet.</p>
+            {% endif %}
+            {% endif %}
+
+            {% if user.user_type == 'merchant' %}
+            <h6 class="card-subtitle mb-3">Bids Placed:</h6>
+            {% if user.bids %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bid in user.bids %}
+                        <tr>
+                            <td>{{ bid.product.name }}</td>
+                            <td>₹{{ bid.amount }}</td>
+                            <td>{{ bid.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if bid.status == 'accepted' else 'warning' if bid.status == 'pending' else 'danger' }}">
+                                    {{ bid.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No bids placed yet.</p>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 
